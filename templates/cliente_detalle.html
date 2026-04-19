@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Cliente: {{ cliente[1] }}</h2>
+
+<p><strong>Teléfono:</strong> {{ cliente[2] }}</p>
+<p><strong>Dirección:</strong> {{ cliente[3] }}</p>
+<p><strong>Email:</strong> {{ cliente[4] }}</p>
+
+<h3 class="mt-4">Historial de servicios</h3>
+
+{% if servicios %}
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for servicio in servicios %}
+        <tr>
+            <td>{{ servicio[0] }}</td>
+            <td>{{ servicio[1] }}</td>
+            <td>{{ servicio[2] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>No hay servicios registrados</p>
+{% endif %}
+
+<a href="/clientes" class="btn btn-secondary mt-3">Volver</a>
+
+{% endblock %}

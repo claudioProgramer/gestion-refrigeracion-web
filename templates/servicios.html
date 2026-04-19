@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Servicios Técnicos</h1>
+
+<h3>Registrar servicio</h3>
+
+<form method="POST">
+
+    <div class="mb-2">
+        <select name="cliente_id" class="form-control" required>
+            <option value="">Seleccionar cliente</option>
+            {% for cliente in clientes %}
+                <option value="{{ cliente[0] }}">{{ cliente[1] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-2"> 
+        <select name="tipo_servicio" class="form-control" required>
+            <option value="">Seleccionar tipo de servicio</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Reparación">Reparación</option>
+            <option value="Instalación">Instalación</option>
+            <option value="Carga de gas">Carga de gas</option>
+        </select>
+    </div>
+
+    <div class="mb-2">
+        <input type="date" name="fecha" class="form-control">
+    </div>
+
+    <div class="mb-2">
+        <textarea name="descripcion" class="form-control" placeholder="Descripción"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar servicio</button>
+
+</form>
+
+
+<h3 class="mt-4">Servicios registrados</h3>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for servicio in servicios %}
+        <tr>
+            <td>{{ servicio[0] }}</td>
+            <td>{{ servicio[1] }}</td>
+            <td>{{ servicio[2] }}</td>
+            <td>{{ servicio[3] }}</td>
+            <td>{{ servicio[4] }}</td>
+            <td>
+                <a href="/eliminar_servicio/{{ servicio[0] }}" 
+                class="btn btn-danger btn-sm"
+                onclick="return confirm('¿Eliminar servicio?')">
+                Eliminar
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
