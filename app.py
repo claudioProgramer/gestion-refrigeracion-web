@@ -22,30 +22,37 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
+
         # Buscar el usuario en la base de datos
         cursor.execute("SELECT * FROM usuarios WHERE username = ?", (username,))
         user = cursor.fetchone()
         conn.close()
+
         # Verificar la contraseña usando check_password_hash
         if user and check_password_hash(user[2], password):
             session["user_id"] = user[0]
             return redirect("/")
         else:
             return "Credenciales incorrectas"
+        
     return render_template("login.html")
+
 
 @app.route("/clientes", methods=["GET", "POST"]) #Definir una ruta para la página de clientes, que acepta tanto solicitudes GET como POST
 def clientes():
     if "user_id" not in session:
         return redirect("/login")
+    
     if request.method == "POST":
         # Obtener los datos del formulario
         nombre = request.form.get("nombre")
         telefono = request.form.get("telefono")
         direccion = request.form.get("direccion")
         email = request.form.get("email")
+
         # Conectar a la base de datos y guardar los datos del cliente
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
@@ -53,15 +60,19 @@ def clientes():
             INSERT INTO clientes (nombre, telefono, direccion, email)
             VALUES (?, ?, ?, ?)
         """, (nombre, telefono, direccion, email))
+
         conn.commit() #Guardar los cambios en la base de datos
         conn.close() # Cerrar la conexión a la base de datos
+
         return redirect("/clientes")
+    
     # si es una solicitud GET, mostrar la lista de clientes
     conn = sqlite3.connect("database.db") 
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM clientes") #Ejecutar una consulta para obtener todos los clientes
     clientes = cursor.fetchall() #Obtener los resultados de la consulta en una lista de tuplas
     conn.close() #Cerrar la conexión a la base de datos
+
     return render_template("clientes.html", clientes=clientes) #Renderizar la plantilla clientes.html y pasar la lista de clientes como contexto
 
 @app.route("/servicios" , methods=["GET", "POST"])
@@ -92,26 +103,34 @@ def servicios():
     conn.close()
     return render_template("servicios.html", clientes=clientes, servicios=servicios)
 
+
 @app.route("/productos", methods=["GET", "POST"])
 def productos():
     if "user_id" not in session:
         return redirect("/login")
+    
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
+
     if request.method == "POST":
         nombre = request.form.get("nombre")
         precio = request.form.get("precio")
         stock = request.form.get("stock")
+
         cursor.execute("""
             INSERT INTO productos (nombre, precio, stock)
             VALUES (?, ?, ?)
         """, (nombre, precio, stock))
+
         conn.commit()
         conn.close()
+
         return redirect("/productos")
+    
     cursor.execute("SELECT * FROM productos")
     productos = cursor.fetchall()
     conn.close()
+    
     return render_template("productos.html", productos=productos)
 
 @app.route("/logout")
@@ -164,7 +183,7 @@ def ver_cliente(id):
     # Obtener datos del cliente
     cursor.execute("SELECT * FROM clientes WHERE id = ?", (id,))
     cliente = cursor.fetchone()
-    # Obtener servicios de ese cliente
+    # Obtener servicios de ese cliente ordenados por fecha descendente
     cursor.execute("""
         SELECT tipo_servicio, fecha, descripcion
         FROM servicios
