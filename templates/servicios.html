@@ -6,6 +6,7 @@
 <h3>Registrar servicio</h3>
 
 <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
     <div class="mb-2">
         <select name="cliente_id" class="form-control" required>

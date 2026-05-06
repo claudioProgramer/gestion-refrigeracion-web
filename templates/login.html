@@ -1,11 +1,121 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gestión de Refrigeración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-{% block content %}
-<h2>Login</h2>
+        .login-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
 
-<form method="POST">
-    <input type="text" name="username" placeholder="Usuario" required><br><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br><br>
-    <button type="submit">Ingresar</button>
-</form>
-{% endblock %}
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 15px 15px 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .login-header i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 0.75rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card login-card">
+                    <div class="login-header">
+                        <i class="bi bi-snow"></i>
+                        <h2 class="mb-0">Gestión Técnica</h2>
+                        <small>Sistema de Refrigeración</small>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person"></i></span>
+                                    <input type="text" id="username" name="username" class="form-control border-start-0" placeholder="admin" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-lock"></i></span>
+                                    <input type="password" id="password" name="password" class="form-control border-start-0" placeholder="••••••••" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-login btn-primary w-100 text-white">
+                                <i class="bi bi-box-arrow-in-right"></i> Ingresar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <p class="text-center text-white-50 mt-3 small">
+                    <i class="bi bi-info-circle"></i> Usuario: admin | Contraseña: 1234
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

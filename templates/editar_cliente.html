@@ -4,6 +4,7 @@
     <h1>Editar Cliente</h1>
 
     <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <input type="text" name="nombre" value="{{ cliente[1] }}" required><br><br>
         <input type="text" name="telefono" value="{{ cliente[2] }}"><br><br>
         <input type="text" name="direccion" value="{{ cliente[3] }}"><br><br>

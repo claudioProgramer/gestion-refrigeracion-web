@@ -193,3 +193,72 @@ def crear_producto(nombre, precio, stock):
     except Exception as e:
         print(f"Error al crear producto: {e}")
         return False
+
+
+# ============ ESTADÍSTICAS (DASHBOARD) ============
+
+def get_total_clientes():
+    """Retorna la cantidad total de clientes."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM clientes")
+    total = cursor.fetchone()[0]
+    conn.close()
+    return total
+
+def get_total_servicios():
+    """Retorna la cantidad total de servicios."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM servicios")
+    total = cursor.fetchone()[0]
+    conn.close()
+    return total
+
+def get_total_productos():
+    """Retorna la cantidad total de productos."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM productos")
+    total = cursor.fetchone()[0]
+    conn.close()
+    return total
+
+def get_servicios_recientes(limite=5):
+    """Retorna los últimos servicios registrados (por defecto 5)."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT servicios.id, clientes.nombre, servicios.tipo_servicio, 
+               servicios.fecha, servicios.descripcion
+        FROM servicios 
+        JOIN clientes ON servicios.cliente_id = clientes.id 
+        ORDER BY servicios.fecha DESC
+        LIMIT ?
+    """, (limite,))
+    servicios = cursor.fetchall()
+    conn.close()
+    return servicios
+
+def get_productos_bajo_stock(stock_minimo=5):
+    """Retorna productos con stock menor al mínimo especificado (por defecto 5)."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, nombre, precio, stock
+        FROM productos
+        WHERE stock <= ?
+        ORDER BY stock ASC
+    """, (stock_minimo,))
+    productos = cursor.fetchall()
+    conn.close()
+    return productos
+
+def get_ingresos_totales():
+    """Retorna el valor total en stock (cantidad * precio)."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COALESCE(SUM(precio * stock), 0) FROM productos")
+    total = cursor.fetchone()[0]
+    conn.close()
+    return round(total, 2)

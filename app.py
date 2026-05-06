@@ -1,17 +1,39 @@
 
 from flask import Flask, render_template, request, redirect, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-
-import sqlite3
+from flask_wtf.csrf import CSRFProtect
+from dotenv import load_dotenv
+import os
 import models
 
-app = Flask(__name__) #Crear una instancia de la aplicación Flask
+# Cargar variables de entorno desde .env
+load_dotenv()
 
-app.secret_key = 'clave_secreta_super_segura'  # Clave para firmar las cookies de sesión
+app = Flask(__name__)
+
+# Configurar secret key desde .env
+app.secret_key = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
+app.config['DEBUG'] = os.getenv('DEBUG', False)
+
+# Inicializar protección CSRF
+csrf = CSRFProtect(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html') #Renderizar la plantilla index.html
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    # Obtener estadísticas para el dashboard
+    stats = {
+        'total_clientes': models.get_total_clientes(),
+        'total_servicios': models.get_total_servicios(),
+        'total_productos': models.get_total_productos(),
+        'ingresos_totales': models.get_ingresos_totales(),
+        'servicios_recientes': models.get_servicios_recientes(5),
+        'productos_bajo_stock': models.get_productos_bajo_stock(5)
+    }
+    
+    return render_template('index.html', stats=stats)
 
 # Definir una ruta para la página de inicio, que renderiza la plantilla index.html
 @app.route("/login", methods=["GET", "POST"])
@@ -41,6 +63,7 @@ def clientes():
         telefono = request.form.get("telefono")
         direccion = request.form.get("direccion")
         email = request.form.get("email")
+
         models.crear_cliente(nombre, telefono, direccion, email)
         return redirect("/clientes")
     
@@ -51,6 +74,7 @@ def clientes():
 def servicios():
     if "user_id" not in session:
         return redirect("/login")
+    
     if request.method == "POST":
         cliente_id = request.form.get("cliente_id")
         tipo_servicio = request.form.get("tipo_servicio")
@@ -95,13 +119,16 @@ def eliminar_cliente(id):
 def editar_cliente(id):
     if "user_id" not in session:
         return redirect("/login")
+    
     if request.method == "POST":
         nombre = request.form.get("nombre")
         telefono = request.form.get("telefono")
         direccion = request.form.get("direccion")
         email = request.form.get("email")
+
         models.actualizar_cliente(id, nombre, telefono, direccion, email)
         return redirect("/clientes")
+    
     cliente = models.get_cliente(id)
     return render_template("editar_cliente.html", cliente=cliente)
 

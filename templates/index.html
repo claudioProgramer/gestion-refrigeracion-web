@@ -1,6 +1,188 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>Bienvenido al sistema de refrigeración</h1>
-    <p>Panel principal</p>
+<div class="container-fluid">
+    <!-- Encabezado Dashboard -->
+    <div class="mb-5">
+        <h1 class="display-4 fw-bold text-dark">Dashboard</h1>
+        <p class="text-muted">Resumen general del sistema de gestión de refrigeración</p>
+    </div>
+
+    <!-- Cards de Estadísticas Principales -->
+    <div class="row mb-4">
+        <!-- Card Clientes -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="card-text text-muted small">Total de Clientes</p>
+                            <h2 class="card-title text-primary fw-bold">{{ stats.total_clientes }}</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="/clientes" class="text-primary text-decoration-none small">Ver clientes →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Servicios -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="card-text text-muted small">Total de Servicios</p>
+                            <h2 class="card-title text-success fw-bold">{{ stats.total_servicios }}</h2>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-tools text-success" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="/servicios" class="text-success text-decoration-none small">Ver servicios →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Productos -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="card-text text-muted small">Total de Productos</p>
+                            <h2 class="card-title text-warning fw-bold">{{ stats.total_productos }}</h2>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-box-seam text-warning" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="/productos" class="text-warning text-decoration-none small">Ver productos →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Ingresos -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="card-text text-muted small">Valor en Stock</p>
+                            <h2 class="card-title text-info fw-bold">{{ "%.2f"|format(stats.ingresos_totales) }}</h2>
+                        </div>
+                        <div class="bg-info bg-opacity-10 p-3 rounded">
+                            <i class="bi bi-cash-coin text-info" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <span class="text-muted small">Inventario total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Servicios Recientes y Productos Bajo Stock -->
+    <div class="row">
+        <!-- Servicios Recientes -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history text-primary"></i> Últimos Servicios
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if stats.servicios_recientes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Tipo</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for servicio in stats.servicios_recientes %}
+                                        <tr>
+                                            <td class="fw-bold">{{ servicio[1] }}</td>
+                                            <td><span class="badge bg-info">{{ servicio[2] }}</span></td>
+                                            <td class="text-muted small">{{ servicio[3] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <p>Sin servicios registrados aún</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top">
+                    <a href="/servicios" class="btn btn-sm btn-outline-primary">Ver todos los servicios</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas - Productos Bajo Stock -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle text-danger"></i> Productos Bajo Stock
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if stats.productos_bajo_stock %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Stock</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto in stats.productos_bajo_stock %}
+                                        <tr class="{% if producto[3] == 0 %}table-danger{% elif producto[3] <= 2 %}table-warning{% endif %}">
+                                            <td class="fw-bold">{{ producto[1] }}</td>
+                                            <td>
+                                                <span class="badge {% if producto[3] == 0 %}bg-danger{% elif producto[3] <= 2 %}bg-warning{% else %}bg-secondary{% endif %}">
+                                                    {{ producto[3] }} unidades
+                                                </span>
+                                            </td>
+                                            <td class="text-muted">${{ "%.2f"|format(producto[2]) }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="p-4 text-center text-muted">
+                            <p><i class="bi bi-check-circle text-success"></i> Todos los productos tienen buen stock</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top">
+                    <a href="/productos" class="btn btn-sm btn-outline-danger">Ver todos los productos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agregar Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 {% endblock %}
