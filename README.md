@@ -1,6 +1,5 @@
 # Sistema de Gestión de Servicios de Refrigeración
 
-#### Video Demo: [<URL AQUÍ>](https://youtu.be/5t6d7za09V0)
 
 #### Description:
 
