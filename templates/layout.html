@@ -32,9 +32,9 @@
         body.dark-mode {
             --bg-primary: #1a1a1a;
             --bg-secondary: #2d2d2d;
-            --text-primary: #f0f0f0;
-            --text-secondary: #b8b8b8;
-            --text-muted: #888;
+            --text-primary: #ffffff;
+            --text-secondary: #d0d0d0;
+            --text-muted: #a0a0a0;
             --border-color: #444;
             --navbar-gradient-1: #1e1e2e;
             --navbar-gradient-2: #2d2d44;
@@ -209,6 +209,66 @@
 
         .sidebar::-webkit-scrollbar-thumb:hover {
             background: #888;
+        }
+
+        /* Override Bootstrap text colors para Dark Mode */
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .text-dark {
+            color: var(--text-primary) !important;
+        }
+
+        .text-secondary {
+            color: var(--text-secondary) !important;
+        }
+
+        .card-text {
+            color: var(--text-secondary) !important;
+        }
+
+        .card-title {
+            color: var(--text-primary) !important;
+        }
+
+        /* Badge text en dark mode */
+        .badge {
+            color: var(--text-primary) !important;
+        }
+
+        /* Table text en dark mode */
+        .table {
+            color: var(--text-primary) !important;
+        }
+
+        .table th {
+            color: var(--text-secondary) !important;
+            background-color: var(--bg-secondary) !important;
+        }
+
+        .table td {
+            color: var(--text-primary) !important;
+            background-color: transparent;
+        }
+
+        /* Dark mode: fondos alternos para tablas */
+        body.dark-mode .table tbody tr {
+            background-color: var(--bg-secondary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        body.dark-mode .table tbody tr:nth-child(even) {
+            background-color: #353535 !important;
+        }
+
+        body.dark-mode .table tbody tr:hover {
+            background-color: #3d3d3d !important;
+        }
+
+        /* Light mode: override para que Bootstrap maneje los fondos */
+        body .table tbody tr {
+            background-color: transparent;
         }
     </style>
 </head>
