@@ -35,6 +35,12 @@ def index():
     
     return render_template('index.html', stats=stats)
 
+@app.route("/configuracion")
+def configuracion():
+    if "user_id" not in session:
+        return redirect("/login")
+    return render_template("configuracion.html")
+
 # Definir una ruta para la página de inicio, que renderiza la plantilla index.html
 @app.route("/login", methods=["GET", "POST"])
 def login():

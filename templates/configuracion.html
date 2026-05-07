@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="mb-4">
+        <h1 class="display-5 fw-bold">
+            <i class="bi bi-gear-fill text-primary"></i> Configuración
+        </h1>
+        <p class="text-muted">Personaliza tu experiencia en el sistema</p>
+    </div>
+
+    <!-- Cards de Configuración -->
+    <div class="row">
+        <!-- Card: Tema -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-palette-fill text-warning"></i> Apariencia
+                    </h5>
+                    <small class="text-muted">Elige tu tema preferido</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between p-3 border rounded mb-3"
+                         style="background-color: var(--bg-secondary);">
+                        <div>
+                            <h6 class="mb-1">Modo Oscuro</h6>
+                            <p class="text-muted small mb-0">Reduce la fatiga visual en ambientes oscuros</p>
+                        </div>
+                        <button class="btn btn-lg" id="configDarkModeToggle" style="border: 2px solid #667eea; cursor: pointer;">
+                            <i class="bi bi-moon"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-3 border rounded" style="background-color: var(--bg-secondary);">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoThemeSwitch">
+                            <label class="form-check-label" for="autoThemeSwitch">
+                                Usar tema del sistema automáticamente
+                            </label>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                            El tema se ajustará según la preferencia de tu navegador
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Información del Sistema -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle-fill text-info"></i> Información
+                    </h5>
+                    <small class="text-muted">Detalles del sistema</small>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="text-muted small">Versión del Sistema</label>
+                        <p class="mb-0 fw-bold">1.0.0</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small">Última Actualización</label>
+                        <p class="mb-0 fw-bold">6 de mayo de 2026</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small">Base de Datos</label>
+                        <p class="mb-0 fw-bold">SQLite</p>
+                    </div>
+                    <hr>
+                    <p class="text-muted small mb-0">
+                        <i class="bi bi-check-circle text-success"></i> Sistema en buen estado
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Ayuda -->
+    <div class="row mt-2">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-question-circle-fill text-success"></i> Ayuda
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-bold">Atajos de Teclado</h6>
+                            <ul class="list-unstyled small">
+                                <li><kbd>D</kbd> → Dashboard</li>
+                                <li><kbd>C</kbd> → Clientes</li>
+                                <li><kbd>S</kbd> → Servicios</li>
+                                <li><kbd>P</kbd> → Productos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-bold">Consejos</h6>
+                            <ul class="list-unstyled small">
+                                <li>✓ Usa el modo oscuro para trabajar de noche</li>
+                                <li>✓ El sidebar se ajusta automáticamente en móviles</li>
+                                <li>✓ Tus preferencias se guardan automáticamente</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle dark mode desde la página de configuración
+    const configDarkModeToggle = document.getElementById('configDarkModeToggle');
+    
+    if (configDarkModeToggle) {
+        configDarkModeToggle.addEventListener('click', () => {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            updateConfigToggle(isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar estado del botón
+        function initializeConfigToggle() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            updateConfigToggle(isDarkMode);
+        }
+
+        function updateConfigToggle(isDarkMode) {
+            const icon = configDarkModeToggle.querySelector('i');
+            if (isDarkMode) {
+                configDarkModeToggle.style.backgroundColor = '#667eea';
+                configDarkModeToggle.style.color = 'white';
+                icon.classList.remove('bi-moon');
+                icon.classList.add('bi-sun');
+            } else {
+                configDarkModeToggle.style.backgroundColor = 'transparent';
+                configDarkModeToggle.style.color = 'inherit';
+                icon.classList.remove('bi-sun');
+                icon.classList.add('bi-moon');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeConfigToggle);
+    }
+</script>
+
+{% endblock %}
