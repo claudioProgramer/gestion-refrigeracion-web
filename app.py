@@ -9,7 +9,7 @@ import models
 # Cargar variables de entorno desde .env
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__) #crear una instancia de la aplicación Flask
 
 # Configurar secret key desde .env
 app.secret_key = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
